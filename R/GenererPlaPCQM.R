@@ -102,6 +102,8 @@ GenererPlaPCQM <- function (shp, arbres, rayonPCQM=25, NbPlac = 10, type="regula
 
   EstimPCQMCor <- mean(t1$Gha)
 
+  EstimPCQMmitchell <- EstimPCQMCor
+
   g <- ggplot() +
     geom_sf(data=shp, fill=NA) +
     geom_sf(data=zoneEchan, fill=NA, color='red', linetype = "12") +
