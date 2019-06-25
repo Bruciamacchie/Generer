@@ -14,6 +14,7 @@
 #' Pour les autres types, le nombre de placettes sera approché.
 #'
 #' @author Bruciamacchie Max
+#'
 #' @import sf
 #' @import tidyverse
 #' @import units
@@ -85,9 +86,11 @@ GenererPlaPCQM <- function (shp, arbres, rayonPCQM=25, NbPlac = 10, type="regula
   # arbresEchCor <- arbresEch %>%
   # filter(rayon <= rayonPCQM)
 
-  arbresEchCor <- expand.grid(NumPlac=1:dim(centrePlac)[1], Quart=1:4) %>%
+  tabComplet <- expand.grid(NumPlac=1:dim(centrePlac)[1], Quart=1:4) %>%
     arrange(NumPlac) %>%
-    left_join(arbresEch, by = c("NumPlac", "Quart")) %>%
+    left_join(arbresEch, by = c("NumPlac", "Quart"))
+
+  arbresEchCor <- tabComplet %>%
     dplyr::select(-geometry) %>%
     mutate(rayon = ifelse(is.na(rayon),
                           quantile(arbresEch$rayon, probs=0.95),
@@ -114,8 +117,8 @@ GenererPlaPCQM <- function (shp, arbres, rayonPCQM=25, NbPlac = 10, type="regula
     geom_sf(data=centrePlac, color='red', shape=3) +
     theme_bw()
 
-  out <- list(EstimPCQM, EstimPCQMCor, g)
-  names(out) <- c("Estim", "EstimCor", "graph")
+  out <- list(EstimPCQM, EstimPCQMCor, tabComplet, g)
+  names(out) <- c("Estim", "EstimCor", "tab", "graph")
   return(out)
 
 }
