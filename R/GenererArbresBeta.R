@@ -6,7 +6,7 @@
 #'
 #' @param shp = Périmètre sous forme d'un objet sf
 #' @param gha = Surfacec terrière à l'hectare
-#' @param SseuilDist = distance mini acceptable entre tiges
+#' @param SeuilDist = distance mini acceptable entre tiges
 #' @param beta1 = premier paramètre d'un loi béta
 #' @param beta2 = second paramètre d'un loi béta
 #' @param dmax = diam max
@@ -49,7 +49,7 @@ GenererArbresBeta <- function(shp, gha, seuilDist, beta1, beta2, dmax, dmin) {
   nb = dim(centres)[1]
   arbres <- centres %>%
     rename(geometry = centres) %>%
-    mutate(Diam = round(Dmin + rbeta(nb, beta1, beta2)*100,0)) %>%
+    mutate(Diam = round(dmin + rbeta(nb, beta1, beta2)*100,0)) %>%
     filter(Diam >=dmin & Diam <= dmax)
   # ------------ suppression des tiges trop proches
   d <- st_distance(centres)
