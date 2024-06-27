@@ -36,6 +36,7 @@ GenererPlaPCQM <- function (shp, arbres, rayonPCQM=25, NbPlac = 10, type="regula
 
   placettes  <- centrePlac %>%
     st_buffer(dist=rayonPCQM)
+  nbPlaReel = dim(centrePlac)[1]
 
   # centrePlac <- st_sample(zoneEchan, NbPlac, type=type, exact=T)
   # placettes  <- st_buffer(centrePlac, dist=rayonPCQM)
@@ -86,7 +87,7 @@ GenererPlaPCQM <- function (shp, arbres, rayonPCQM=25, NbPlac = 10, type="regula
   # arbresEchCor <- arbresEch %>%
   # filter(rayon <= rayonPCQM)
 
-  tabComplet <- expand.grid(NumPlac=1:dim(centrePlac)[1], Quart=1:4) %>%
+  tabComplet <- expand.grid(NumPlac=1:nbPlaReel, Quart=1:4) %>%
     arrange(NumPlac) %>%
     left_join(arbresEch, by = c("NumPlac", "Quart"))
 
@@ -117,8 +118,8 @@ GenererPlaPCQM <- function (shp, arbres, rayonPCQM=25, NbPlac = 10, type="regula
     geom_sf(data=centrePlac, color='red', shape=3) +
     theme_bw()
 
-  out <- list(EstimPCQM, EstimPCQMCor, tabComplet, g)
-  names(out) <- c("Estim", "EstimCor", "tab", "graph")
+  out <- list(nbPlaReel, EstimPCQM, EstimPCQMCor, tabComplet, g)
+  names(out) <- c("Nb", "Estim", "EstimCor", "tab", "graph")
   return(out)
 
 }
