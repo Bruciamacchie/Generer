@@ -4,7 +4,14 @@
 \alias{GenererPlaPCQM}
 \title{Fonction permettant de générer des placettes PCQM}
 \usage{
-GenererPlaPCQM(shp, arbres, rayonPCQM = 25, NbPlac = 10, type = "regular")
+GenererPlaPCQM(
+  shp,
+  placettes,
+  arbres,
+  rayonPCQM = 25,
+  NbPlac = 10,
+  type = "regular"
+)
 }
 \arguments{
 \item{shp}{= Périmètre sous forme d'un objet sf}

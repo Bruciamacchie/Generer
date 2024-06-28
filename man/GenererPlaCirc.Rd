@@ -4,7 +4,7 @@
 \alias{GenererPlaCirc}
 \title{Fonction permettant de générer des placettes circulaires}
 \usage{
-GenererPlaCirc(shp, arbres, rayon = 15, NbPlac = 10, type = "regular")
+GenererPlaCirc(shp, placettes, arbres, rayon = 15)
 }
 \arguments{
 \item{shp}{= Périmètre sous forme d'un objet sf}

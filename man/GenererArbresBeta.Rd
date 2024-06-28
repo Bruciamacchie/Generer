@@ -19,7 +19,7 @@ GenererArbresBeta(shp, gha, seuilDist, beta1, beta2, dmax, dmin)
 
 \item{dmin}{= diam min}
 
-\item{SseuilDist}{= distance mini acceptable entre tiges}
+\item{SeuilDist}{= distance mini acceptable entre tiges}
 }
 \value{
 Une liste d'arbres sous forme d'un objet sf

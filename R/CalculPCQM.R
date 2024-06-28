@@ -3,9 +3,9 @@
 #'
 #' @return Surface terrière et densité moyennes.
 #'
-#' @param tab = tableau
+#' @param df = tableau contenant obligatoirement 4 colonnes dénommées "NumPlac","Quart","Dist","Diam". Voir détails
 #'
-#' @details Le tableau en entrée doit contenir 4 colonnes dénommées "NumPlac","Quart","rayon","Diam".
+#' @details Le tableau en entrée doit contenir 4 colonnes dénommées "NumPlac","Quart","Dist","Diam".
 #'
 #' @author Bruciamacchie Max
 #'
@@ -20,17 +20,18 @@
 #'
 #' @export
 
-CalculPCQM <- function(tab, pla) {
-  if (sum(c("NumPlac","Quart","rayon","Diam") %in% names(tab)) == 4) {
+CalculPCQM <- function(df, pla) {
+  if (sum(c("NumPlac","Quart","Dist","Diam") %in% names(df)) == 4) {
     if (class(pla) %in% c("integer", "numeric")) {
 
-      if("geometry" %in% names(tab)) {
-        tab <- tab  %>% dplyr::select(-geometry)
+      if("geometry" | "geom" %in% names(df)) {
+        df <- df  %>% dplyr::select(-starts_with("geom"))
+
       }
       Placettes <- data.frame(NumPlac = pla)
       Quarts    <- data.frame(Quart = 1:4)
       nb             <- dim(Placettes)[1]
-      listPlacEch    <- unique(tab$NumPlac)
+      listPlacEch    <- unique(df$NumPlac)
       NbPlacEch      <- length(listPlacEch)
 
       tabComplet <- merge(Placettes, Quarts, by=NULL) %>%
@@ -38,13 +39,13 @@ CalculPCQM <- function(tab, pla) {
         left_join(tab, by = c("NumPlac", "Quart"))
 
       tabCor <- tabComplet %>%
-        mutate(rayon = ifelse(is.na(rayon),
-                              quantile(arbresEch$rayon, probs=0.95),
-                              rayon))
+        mutate(Dist = ifelse(is.na(Dist),
+                              quantile(arbresEch$Dist, probs=0.95),
+                              Dist))
       # ------- méthode par placette
       t1 <- tabCor %>%
         group_by(NumPlac) %>%
-        mutate(Poids = 10000*3/pi/sum(rayon^2),
+        mutate(Poids = 10000*3/pi/sum(Dist^2),
                Gha = G*Poids) %>%
         summarise(nb = n(),
                   Nha = sum(Poids),
@@ -57,7 +58,7 @@ CalculPCQM <- function(tab, pla) {
         Coef <- as.numeric(CoefftPCQM[Pourc, 2])
       } else{Coef=1}
 
-      nha <- 10000*4*(4*nb-1)/pi/sum(tab$rayon^2)*Coef
+      nha <- 10000*4*(4*nb-1)/pi/sum(tab$Dist^2)*Coef
       gmoy <- mean(tab$G)
       t2 <- tibble(Nha = nha,
                    Gha = Nha*gmoy)
@@ -69,5 +70,5 @@ CalculPCQM <- function(tab, pla) {
 
     } else {print("La liste des placettes doit être fournie sous forme d'integer ou numeric.")}
 
-  } else {print("Le tableau en entrée doit contenir 4 colonnes dénommées NumPlac, Quart, rayon, Diam.")}
+  } else {print("Le tableau en entrée doit contenir 4 colonnes dénommées NumPlac, Quart, Dist, Diam.")}
 }

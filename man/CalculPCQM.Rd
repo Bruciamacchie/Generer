@@ -4,10 +4,10 @@
 \alias{CalculPCQM}
 \title{Calcul placettes PCQM}
 \usage{
-CalculPCQM(tab, pla)
+CalculPCQM(df, pla)
 }
 \arguments{
-\item{tab}{= tableau}
+\item{df}{= tableau contenant obligatoirement 4 colonnes dénommées "NumPlac","Quart","Dist","Diam". Voir détails}
 }
 \value{
 Surface terrière et densité moyennes.
@@ -16,7 +16,7 @@ Surface terrière et densité moyennes.
 Calcul de la surface terrière et de la densité à partir n placettes PCQM.
 }
 \details{
-Le tableau en entrée doit contenir 4 colonnes dénommées "NumPlac","Quart","rayon","Diam".
+Le tableau en entrée doit contenir 4 colonnes dénommées "NumPlac","Quart","Dist","Diam".
 }
 \examples{
 data(perim)
