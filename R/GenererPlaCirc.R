@@ -26,13 +26,17 @@
 #'
 #' @export
 
-GenererPlaCirc <- function (shp, arbres, rayon = 15, NbPlac = 10, type="regular") {
+GenererPlaCirc <- function (shp, placettes, arbres, rayon = 15) {
 
-  zoneEchan  <- st_buffer(shp, dist=-rayon)
-  centrePlac <- st_sample(zoneEchan, NbPlac, type=type, exact=T)
-  placettes  <- st_buffer(centrePlac, dist=rayon)
-  placettes <- st_sf(placettes) %>%
-    mutate(NumPlac = 1:length(centrePlac))
+  placettes  <- placettes |>
+    st_buffer(dist=rayon)
+
+  # zoneEchan  <- st_buffer(shp, dist=-rayon)
+  # centrePlac <- st_sample(zoneEchan, NbPlac, type=type, exact=T)
+  # placettes  <- st_buffer(centrePlac, dist=rayon)
+  # placettes <- st_sf(placettes) %>%
+  #   mutate(NumPlac = 1:length(centrePlac))
+
   echan <- st_intersection(arbres, placettes)
 
   tabCir <- echan %>%
@@ -40,18 +44,10 @@ GenererPlaCirc <- function (shp, arbres, rayon = 15, NbPlac = 10, type="regular"
     summarise(Gha = sum(G)*10000/pi/rayon^2)
   EstimCir <- sum(tabCir$Gha)/length(centrePlac)
 
-  g <- ggplot() +
-    geom_sf(data=shp, fill=NA) +
-    geom_sf(data=zoneEchan, fill=NA, color='red', linetype = "12") +
-    geom_sf(data=placettes, fill='red', alpha=0.2) +
-    geom_sf(data=centrePlac, color='red', shape=3) +
-    geom_sf(data=arbres, aes(size=Diam), shape=1, color='blue', alpha=0.5) +
-    guides(size=F) +
-    geom_sf(data=echan,  aes(size=Diam), color='blue', alpha=0.5) +
-    guides(size=F)
 
-  out <- list(EstimCir, g)
-  names(out) <- c("Estim", "graph")
+
+  out <- list(EstimCir,  echan)
+  names(out) <- c("Estim", "echan")
   return(out)
 
 }
